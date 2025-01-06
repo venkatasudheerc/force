@@ -33,7 +33,7 @@ if __name__ == '__main__':
         # Gather data and rank them
         # ranking based on RDX
         rank = rankData.RankData(target, interval="1d")
-        # df = rank.load_data()
+        df = rank.load_data()
         rank.rank_data()
 
         # Strategy test
