@@ -214,9 +214,13 @@ class Strategy:
             # df = df[df['spike14'] == 0]
 
             long_df = df[df['rsi'] > 55]
+            long_df = long_df[long_df['cRank'] > 94]
+            long_df = long_df[long_df['rs5'] > long_df['rs13']]
             # long_df = long_df[long_df['rs13Rank'] > long_df['rs34Rank']]
 
             short_df = df[df['rsi'] < 35]
+            short_df = short_df[short_df['rs5'] < 6]
+            short_df = short_df[short_df['rs5'] < short_df['rs13']]
             # short_df = short_df[short_df['rs13Rank'] < short_df['rs34Rank']]
 
             # ma_long_df = df[df['bull_signal'] == True]
