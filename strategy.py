@@ -86,7 +86,8 @@ class Strategy:
             if row.Ticker in df.values:
                 df_row = df[df['Ticker'] == row.Ticker]
                 if df_row.iloc[0]['cRank'] < 95 \
-                        or df_row.iloc[0]['rsi'] < 55:
+                        or df_row.iloc[0]['rsi5'] < 55 \
+                        or df_row.iloc[0]['Open'] < row.Entry_Price * 0.9:
                     temp = temp[temp['Ticker'] != row.Ticker]
                     dict1.update({
                         'Entry_Date': row.Entry_Date,
@@ -122,7 +123,8 @@ class Strategy:
             if row.Ticker in df.values:
                 df_row = df[df['Ticker'] == row.Ticker]
                 if df_row.iloc[0]['cRank'] > 5 \
-                        or df_row.iloc[0]['rsi'] > 35:
+                        or df_row.iloc[0]['rsi5'] > 35 \
+                        or df_row.iloc[0]['Open'] > row.Entry_Price * 1.1:
                     temp = temp[temp['Ticker'] != row.Ticker]
                     dict1.update({
                         'Entry_Date': row.Entry_Date,
@@ -148,49 +150,6 @@ class Strategy:
         self.short_portfolio = temp
         # print(len(self.portfolio.index))
 
-    def exit_current_portfolio(self, df, d):
-        temp = self.portfolio
-        rows_list = []
-        print("Exiting All positions on ", d)
-        for index, row in self.portfolio.iterrows():
-            # print(index, " : ", row.Ticker)
-            dict1 = {}
-            if row.Ticker in df.values:
-                df_row = df[df['Ticker'] == row.Ticker]
-                if True:
-                    temp = temp[temp['Ticker'] != row.Ticker]
-                    gain = 0
-                    if self.is_long_only:
-                        gain = ((df_row.iloc[0]['Open'] / row.Entry_Price) - 1) * 100
-                        dollar_gain = (df_row.iloc[0]['Open'] * row.Qty) - (row.Entry_Price * row.Qty)
-                    else:
-                        gain = ((row.Entry_Price / df_row.iloc[0]['Open']) - 1) * 100
-                        dollar_gain = (row.Entry_Price * row.Qty) - (df_row.iloc[0]['Open'] * row.Qty)
-
-                    dict1.update({
-                        'Entry_Date': row.Entry_Date,
-                        'Signal': row.Signal,
-                        'Ticker': row.Ticker,
-                        'Entry_Price': row.Entry_Price,
-                        'SL_Price': row.SL_Price,
-                        'Qty': row.Qty,
-                        'Exit_Date': d,
-                        'Exit_Price': df_row.iloc[0]['Open'],
-                        'Gain': gain,
-                        'Gain_in_Dollars': dollar_gain
-                    })
-                    rows_list.append(dict1)
-        # print("SL triggered for ", rows_list.__len__(), " symbols")
-        if len(self.closed_pos.index) == 0:
-            self.closed_pos = pd.DataFrame(rows_list)
-        else:
-            self.closed_pos = pd.concat([self.closed_pos, pd.DataFrame(rows_list)])
-
-        self.closed_pos = self.closed_pos.round(decimals=2)
-        self.closed_pos.to_csv("closed_positions.csv", index=False)
-        self.portfolio = temp
-        # print(len(self.portfolio.index))
-
     def evaluate(self, start_date=""):
         ranked_files = glob.glob(self.rank_data_location + "*_*.csv")
         ranked_files.sort()
@@ -211,16 +170,18 @@ class Strategy:
             d = file_name[10:18]
             # print(d)
             df = pd.read_csv(file)
-            # df = df[df['spike14'] == 0]
+            # df = df[df['spike5'] == 0]
 
-            long_df = df[df['rsi'] > 55]
+            long_df = df[df['rsi5'] > 55]
+            # long_df = long_df[long_df['pdi'] > 20]
             long_df = long_df[long_df['cRank'] > 94]
-            long_df = long_df[long_df['rs5'] > long_df['rs13']]
+            # long_df = long_df[long_df['rs5'] > long_df['rs13']]
             # long_df = long_df[long_df['rs13Rank'] > long_df['rs34Rank']]
 
-            short_df = df[df['rsi'] < 35]
-            short_df = short_df[short_df['rs5'] < 6]
-            short_df = short_df[short_df['rs5'] < short_df['rs13']]
+            short_df = df[df['rsi5'] < 35]
+            # short_df = short_df[short_df['mdi'] > 20]
+            short_df = short_df[short_df['cRank'] < 6]
+            # short_df = short_df[short_df['rs5'] < short_df['rs13']]
             # short_df = short_df[short_df['rs13Rank'] < short_df['rs34Rank']]
 
             # ma_long_df = df[df['bull_signal'] == True]
