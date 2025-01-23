@@ -77,16 +77,18 @@ class RankData:
                     # print(rows_list)
 
                 df = pd.DataFrame(rows_list,
-                                  columns=['Open', 'Close', 'rsi', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252', 'cumRS'])
+                                  columns=['Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252',
+                                           'cumRS', 'pdi', 'mdi', 'spike5'])
                 # print(df.tail(1))
                 df['Ticker'] = self.symbols
-                df = df[['Ticker', 'Open', 'Close', 'rsi', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252', 'cumRS']]
-                df['cRS'] = df['rs5']*0.2+df['rs13']*0.4+df['rs34']*0.4
+                df = df[['Ticker', 'Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252', 'cumRS',
+                         'pdi', 'mdi', 'spike5']]
+                df['cRS'] = df['rs5']*0.4+df['rs13']*0.4+df['rs34']*0.2
                 df['cRank'] = df['cRS'].rank(pct=True) * 100
-                # df['cRS1'] = df['rs5'] * 0.2 + df['rs13'] * 0.3 + df['rs34'] * 0.5
+                # df['cRS1'] = df['rs5'] * 0.4 + df['rs13'] * 0.3 + df['rs34'] * 0.3
                 # df['cRank1'] = df['cRS1'].rank(pct=True) * 100
-                df['rs13Rank'] = df['rs13'].rank(pct=True) * 100
-                df['rs34Rank'] = df['rs34'].rank(pct=True) * 100
+                # df['rs13Rank'] = df['rs13'].rank(pct=True) * 100
+                # df['rs34Rank'] = df['rs34'].rank(pct=True) * 100
                 df['cumRank'] = df['cumRS'].rank(pct=True)*100
                 # df['cumRS1'] = df['rs5'] * 0.2 + df['rs13'] * 0.2 + df['rs34'] * 0.2 + \
                 #                  df['rs55'] * 0.2 + df['rs252'] * 0.2
