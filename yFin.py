@@ -85,6 +85,14 @@ class YFinance:
                                      + self.data['rs252'] * 0.0
             indicator_rsi = RSIIndicator(self.data['Close'], window=14)
             self.data['rsi'] = indicator_rsi.rsi()
+            indicator_rsi = RSIIndicator(self.data['Close'], window=5)
+            self.data['rsi5'] = indicator_rsi.rsi()
+            indicator_adx = ADXIndicator(self.data['High'], self.data['Low'], self.data['Close'], window=5)
+            self.data['pdi'] = indicator_adx.adx_pos()
+            self.data['mdi'] = indicator_adx.adx_neg()
+            self.data['adx_diff'] = abs(abs((indicator_adx.adx_pos() - indicator_adx.adx_neg())).diff())
+            self.data['spike_exists'] = self.data['adx_diff'].gt(20)
+            self.data['spike5'] = self.data['spike_exists'].rolling(5).mean().gt(0)
 
             '''
             atr = AverageTrueRange(self.data['High'], self.data['Low'], self.data['Close'], window=5)
