@@ -87,6 +87,7 @@ class YFinance:
             self.data['rsi'] = indicator_rsi.rsi()
             indicator_rsi = RSIIndicator(self.data['Close'], window=5)
             self.data['rsi5'] = indicator_rsi.rsi()
+            self.data['rsi5_sma'] = self.data['rsi5'].rolling(8).mean()
             indicator_adx = ADXIndicator(self.data['High'], self.data['Low'], self.data['Close'], window=5)
             self.data['pdi'] = indicator_adx.adx_pos()
             self.data['mdi'] = indicator_adx.adx_neg()

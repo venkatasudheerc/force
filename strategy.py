@@ -169,24 +169,27 @@ class Strategy:
             d = file_name[10:18]
             # print(d)
             df = pd.read_csv(file)
-            # df = df[df['spike5'] == 0]
+            df = df[df['spike5'] == 0]
 
             long_df = df[df['rsi5'] > 55]
-            # long_df = long_df[long_df['pdi'] > 20]
-            long_df = long_df[long_df['cRank'] > 94]
+            long_df = long_df[long_df['pdi'] > 20]
+            long_df = long_df[long_df['rsi5'] > long_df['rsi5_sma']]
+            long_df = long_df[long_df['cRank'] > 95]
             # long_df = long_df[long_df['rs5'] > long_df['rs13']]
             # long_df = long_df[long_df['rs13Rank'] > long_df['rs34Rank']]
 
             short_df = df[df['rsi5'] < 35]
-            # short_df = short_df[short_df['mdi'] > 20]
-            short_df = short_df[short_df['cRank'] < 6]
+            short_df = short_df[short_df['mdi'] > 20]
+            # short_df = short_df[short_df['rsi5'] < short_df['rsi']]
+            short_df = short_df[short_df['rsi5'] < short_df['rsi5_sma']]
+            short_df = short_df[short_df['cRank'] < 5]
             # short_df = short_df[short_df['rs5'] < short_df['rs13']]
             # short_df = short_df[short_df['rs13Rank'] < short_df['rs34Rank']]
 
             # ma_long_df = df[df['bull_signal'] == True]
             # ma_short_df = df[df['bear_signal'] > 0]
-            long_df = long_df.sort_values(by=['cRank'], ascending=False)
-            short_df = short_df.sort_values(by=['cRank'], ascending=True)
+            long_df = long_df.sort_values(by=['rsi5'], ascending=False)
+            short_df = short_df.sort_values(by=['rsi5'], ascending=True)
             # print(d, ",", len(long_df), ",", len(short_df))
 
             '''

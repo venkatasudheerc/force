@@ -78,11 +78,11 @@ class RankData:
 
                 df = pd.DataFrame(rows_list,
                                   columns=['Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252',
-                                           'cumRS', 'pdi', 'mdi', 'spike5'])
+                                           'cumRS', 'pdi', 'mdi', 'spike5', 'rsi5_sma'])
                 # print(df.tail(1))
                 df['Ticker'] = self.symbols
                 df = df[['Ticker', 'Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252', 'cumRS',
-                         'pdi', 'mdi', 'spike5']]
+                         'pdi', 'mdi', 'spike5', 'rsi5_sma']]
                 df['cRS'] = df['rs5']*0.4+df['rs13']*0.4+df['rs34']*0.2
                 df['cRank'] = df['cRS'].rank(pct=True) * 100
                 # df['cRS1'] = df['rs5'] * 0.4 + df['rs13'] * 0.3 + df['rs34'] * 0.3
@@ -98,7 +98,7 @@ class RankData:
                 # df['cumRS3'] = df['rs5'] * 0.2 + df['rs13'] * 0.2 + df['rs55'] * 0.3 + df['rs252'] * 0.3
                 # df['cumRank3'] = df['cumRS3'].rank(pct=True) * 100
 
-                df = df.sort_values(by=['cumRS'], ascending=False)
+                df = df.sort_values(by=['cRank'], ascending=False)
                 df = df.round(decimals=4)
                 df.to_csv(self.rank_location + "rank_data_" + d1 + ".csv", index=False)
                 print("completed rank: ", start)
