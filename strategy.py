@@ -169,7 +169,6 @@ class Strategy:
             d = file_name[10:18]
             # print(d)
             df = pd.read_csv(file)
-            df = df[df['spike5'] == 0]
 
             long_df = df[df['rsi5'] > 55]
             long_df = long_df[long_df['pdi'] > 20]
@@ -219,7 +218,7 @@ class Strategy:
 
                 remaining_space = max_positions_long - len(self.long_portfolio.index)
                 rows_list = []
-                # long_df = long_df[long_df['spike14'] == 0]
+                long_df = long_df[long_df['spike5'] == 0]
                 if remaining_space > 0:
                     for row in long_df.iterrows():
                         # print(type(row[1]))
@@ -255,7 +254,7 @@ class Strategy:
                 remaining_space = max_positions_short - len(self.short_portfolio.index)
                 # print(self.portfolio)
                 rows_list = []
-                # short_df = short_df[short_df['spike14'] == 0]
+                short_df = short_df[short_df['spike5'] == 0]
                 if remaining_space > 0:
                     for row in short_df.iterrows():
                         # print(type(row[1]))

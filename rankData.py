@@ -85,6 +85,10 @@ class RankData:
                          'pdi', 'mdi', 'spike5', 'rsi5_sma']]
                 df['cRS'] = df['rs5']*0.4+df['rs13']*0.4+df['rs34']*0.2
                 df['cRank'] = df['cRS'].rank(pct=True) * 100
+                df['cRS_smoothed'] = df['rs5'].rolling(5).mean()*0.4 + \
+                                     df['rs13'].rolling(13).mean()*0.4 + \
+                                     df['rs34'].rolling(34).mean()*0.2
+                df['cRank_smoothed'] = df['cRS_smoothed'].rank(pct=True) * 100
                 # df['cRS1'] = df['rs5'] * 0.4 + df['rs13'] * 0.3 + df['rs34'] * 0.3
                 # df['cRank1'] = df['cRS1'].rank(pct=True) * 100
                 # df['rs13Rank'] = df['rs13'].rank(pct=True) * 100
