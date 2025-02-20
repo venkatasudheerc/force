@@ -32,17 +32,18 @@ class YFinance:
     def fetch_data(self):
         now = datetime.now() + timedelta(days=1)
         end_date = now.strftime("%Y-%m-%d")
+        # yf.enable_debug_mode()
         # print(end_date)
         if self.interval == "1d":
             if self.ticker == "SPY" or self.ticker == "^NSEI":
                 if self.magic:
                     self.data = yf.download(tickers=self.ticker, period="60d", interval="90m")
                 else:
-                    self.data = yf.download(tickers=self.ticker, period=self.period, interval=self.interval,
-                                            start="2024-09-01", end=end_date)
+                    self.data = yf.download(tickers=self.ticker, interval=self.interval,
+                                            start="2024-09-01", end=end_date, multi_level_index=False)
             else:
-                self.data = yf.download(tickers=self.ticker, period=self.period, interval=self.interval,
-                                        start="2024-09-01", end=end_date)
+                self.data = yf.download(tickers=self.ticker, interval=self.interval,
+                                        start="2024-09-01", end=end_date, multi_level_index=False)
         else:
             # self.data = yf.download(tickers=self.ticker, period="60d", interval="90m")
             self.data = yf.download(tickers=self.ticker, period=self.period, interval=self.interval, start="2023-01-01",
