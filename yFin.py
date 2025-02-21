@@ -60,12 +60,13 @@ class YFinance:
         return rs
 
     def load_data(self):
-        logging.info("Data Fetch Started")
+        # logging.info("Data Fetch Started.")
         self.data = self.fetch_data()
         self.data = self.data.round(decimals=2)
         self.data.to_csv(self.file_name)
         # print(self.data.head())
-        logging.info("Data Fetch Completed")
+        # logging.info("Data Fetch completed")
+        logging.info(self.ticker + " : rows fetched: " + len(self.data).__str__())
 
         try:
             # Data enrichment
@@ -151,11 +152,11 @@ class YFinance:
                 self.data = self.data.rename(columns={"Datetime": "Date"})
             '''
 
-            logging.info("Custom data added")
+            # logging.info("Custom data added")
 
             self.data = self.data.round(decimals=4)
             self.data.to_csv(self.file_name, index=False)
-            logging.info("data written to data.csv file")
+            # logging.info("data written to data.csv file")
 
         except Exception as ex:
             print("Exception occurred.", ex)
