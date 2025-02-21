@@ -40,10 +40,10 @@ class YFinance:
                     self.data = yf.download(tickers=self.ticker, period="60d", interval="90m")
                 else:
                     self.data = yf.download(tickers=self.ticker, interval=self.interval,
-                                            start="2024-09-01", end=end_date, multi_level_index=False)
+                                            start="2024-09-03", end=end_date, multi_level_index=False)
             else:
                 self.data = yf.download(tickers=self.ticker, interval=self.interval,
-                                        start="2024-09-01", end=end_date, multi_level_index=False)
+                                        start="2024-09-03", end=end_date, multi_level_index=False)
         else:
             # self.data = yf.download(tickers=self.ticker, period="60d", interval="90m")
             self.data = yf.download(tickers=self.ticker, period=self.period, interval=self.interval, start="2023-01-01",
