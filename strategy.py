@@ -84,9 +84,9 @@ class Strategy:
             dict1 = {}
             if row.Ticker in df.values:
                 df_row = df[df['Ticker'] == row.Ticker]
-                if df_row.iloc[0]['cRank'] < 95 \
-                        or df_row.iloc[0]['rsi5'] < 55 \
-                        or df_row.iloc[0]['Open'] < row.Entry_Price * 0.9:
+                if df_row.iloc[0]['rsi5'] < df_row.iloc[0]['rsi5_sma'] \
+                        or df_row.iloc[0]['rsi5'] > 95 \
+                        or df_row.iloc[0]['Open'] < row.Entry_Price * 0.95:
                     temp = temp[temp['Ticker'] != row.Ticker]
                     dict1.update({
                         'Entry_Date': row.Entry_Date,
@@ -121,9 +121,9 @@ class Strategy:
             dict1 = {}
             if row.Ticker in df.values:
                 df_row = df[df['Ticker'] == row.Ticker]
-                if df_row.iloc[0]['cRank'] > 5 \
-                        or df_row.iloc[0]['rsi5'] > 35 \
-                        or df_row.iloc[0]['Open'] > row.Entry_Price * 1.1:
+                if df_row.iloc[0]['rsi5'] > df_row.iloc[0]['rsi5_sma'] \
+                        or df_row.iloc[0]['rsi5'] < 5 \
+                        or df_row.iloc[0]['Open'] > row.Entry_Price * 1.05:
                     temp = temp[temp['Ticker'] != row.Ticker]
                     dict1.update({
                         'Entry_Date': row.Entry_Date,
@@ -172,15 +172,18 @@ class Strategy:
 
             long_df = df[df['rsi5'] > 55]
             long_df = long_df[long_df['pdi'] > 20]
+            long_df = long_df[long_df['rsi'] > 55]
             long_df = long_df[long_df['rsi5'] > long_df['rsi5_sma']]
+            long_df = long_df[long_df['rsi5'] < 90]
             long_df = long_df[long_df['cRank'] > 95]
             # long_df = long_df[long_df['rs5'] > long_df['rs13']]
             # long_df = long_df[long_df['rs13Rank'] > long_df['rs34Rank']]
 
-            short_df = df[df['rsi5'] < 35]
+            short_df = df[df['rsi5'] < 40]
             short_df = short_df[short_df['mdi'] > 20]
-            # short_df = short_df[short_df['rsi5'] < short_df['rsi']]
+            short_df = short_df[short_df['rsi'] < 40]
             short_df = short_df[short_df['rsi5'] < short_df['rsi5_sma']]
+            short_df = short_df[short_df['rsi5'] > 10]
             short_df = short_df[short_df['cRank'] < 5]
             # short_df = short_df[short_df['rs5'] < short_df['rs13']]
             # short_df = short_df[short_df['rs13Rank'] < short_df['rs34Rank']]
@@ -218,7 +221,7 @@ class Strategy:
 
                 remaining_space = max_positions_long - len(self.long_portfolio.index)
                 rows_list = []
-                long_df = long_df[long_df['spike5'] == 0]
+                long_df = long_df[long_df['spike14'] == 0]
                 if remaining_space > 0:
                     for row in long_df.iterrows():
                         # print(type(row[1]))
@@ -254,7 +257,7 @@ class Strategy:
                 remaining_space = max_positions_short - len(self.short_portfolio.index)
                 # print(self.portfolio)
                 rows_list = []
-                short_df = short_df[short_df['spike5'] == 0]
+                short_df = short_df[short_df['spike14'] == 0]
                 if remaining_space > 0:
                     for row in short_df.iterrows():
                         # print(type(row[1]))

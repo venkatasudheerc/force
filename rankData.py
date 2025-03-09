@@ -61,7 +61,7 @@ class RankData:
                     # print("started with : ", stock)
                     if stock in self.indices.values:
                         continue
-                    df = pd.read_csv(self.data_location+stock+".csv")
+                    df = pd.read_csv(self.data_location + stock + ".csv")
                     # print(df)
                     if end == 1001:
                         print("end calculated based on stock: ", stock)
@@ -77,23 +77,29 @@ class RankData:
                     # print(rows_list)
 
                 df = pd.DataFrame(rows_list,
-                                  columns=['Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252',
-                                           'cumRS', 'pdi', 'mdi', 'spike5', 'rsi5_sma'])
+                                  columns=['Open', 'Close', 'rsi', 'rsi_sma', 'rsi5', 'rsi5_sma', 'rs5', 'rs13', 'rs34',
+                                           'rs55', 'cumRS', 'pdi', 'mdi', 'spike5', 'spike14'])
                 # print(df.tail(1))
                 df['Ticker'] = self.symbols
-                df = df[['Ticker', 'Open', 'Close', 'rsi', 'rsi5', 'rs5', 'rs13', 'rs34', 'rs55', 'rs252', 'cumRS',
-                         'pdi', 'mdi', 'spike5', 'rsi5_sma']]
-                df['cRS'] = df['rs5']*0.4+df['rs13']*0.4+df['rs34']*0.2
+                df = df[['Ticker', 'Open', 'Close', 'rsi', 'rsi_sma', 'rsi5', 'rsi5_sma', 'rs5', 'rs13', 'rs34', 'rs55',
+                         'cumRS', 'pdi', 'mdi', 'spike5', 'spike14']]
+                df['cRS'] = df['rs5'] * 0.4 + df['rs13'] * 0.4 + df['rs34'] * 0.2
                 df['cRank'] = df['cRS'].rank(pct=True) * 100
-                df['cRS_smoothed'] = df['rs5'].rolling(5).mean()*0.4 + \
-                                     df['rs13'].rolling(13).mean()*0.4 + \
-                                     df['rs34'].rolling(34).mean()*0.2
+
+                '''
+                Commenting below smoothing logic
+                
+                df['cRS_smoothed'] = df['rs5'].rolling(5).mean() * 0.4 + \
+                                     df['rs13'].rolling(13).mean() * 0.4 + \
+                                     df['rs34'].rolling(34).mean() * 0.2
                 df['cRank_smoothed'] = df['cRS_smoothed'].rank(pct=True) * 100
+                '''
+
                 # df['cRS1'] = df['rs5'] * 0.4 + df['rs13'] * 0.3 + df['rs34'] * 0.3
                 # df['cRank1'] = df['cRS1'].rank(pct=True) * 100
                 # df['rs13Rank'] = df['rs13'].rank(pct=True) * 100
                 # df['rs34Rank'] = df['rs34'].rank(pct=True) * 100
-                df['cumRank'] = df['cumRS'].rank(pct=True)*100
+                df['cumRank'] = df['cumRS'].rank(pct=True) * 100
                 # df['cumRS1'] = df['rs5'] * 0.2 + df['rs13'] * 0.2 + df['rs34'] * 0.2 + \
                 #                  df['rs55'] * 0.2 + df['rs252'] * 0.2
                 # df['cumRank1'] = df['cumRS1'].rank(pct=True) * 100
@@ -129,5 +135,3 @@ class RankData:
                         shutil.rmtree(file_path)
                 except Exception as e:
                     print('Failed to delete %s. Reason: %s' % (file_path, e))
-
-
