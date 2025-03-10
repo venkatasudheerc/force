@@ -96,7 +96,7 @@ class YFinance:
             self.data['pdi'] = indicator_adx.adx_pos()
             self.data['mdi'] = indicator_adx.adx_neg()
             self.data['adx_diff'] = abs(abs((indicator_adx.adx_pos() - indicator_adx.adx_neg())).diff())
-            self.data['spike_exists'] = self.data['adx_diff'].gt(20)
+            self.data['spike_exists'] = self.data['adx_diff'].gt(30)
             self.data['spike5'] = self.data['spike_exists'].rolling(5).mean().gt(0)
             self.data['spike14'] = self.data['spike_exists'].rolling(14).mean().gt(0)
 
